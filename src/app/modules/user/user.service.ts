@@ -9,8 +9,21 @@ const createUser = async (payload: any) => {
   return result;
 };
 
-const getAllUser = async () => {
-  const result = await prisma.user.findMany();
+const getAllUser = async (queryParams: any) => {
+  const { q } = queryParams;
+  const conditions = [];
+  if (q) {
+    conditions.push({
+      OR: ["username", "email"].map((field) => ({
+        [field]: {
+          contains: q,
+        },
+      })),
+    });
+  }
+  const result = await prisma.user.findMany({
+    where: { AND: conditions },
+  });
   return result;
 };
 
