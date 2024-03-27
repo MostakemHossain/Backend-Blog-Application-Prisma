@@ -10,7 +10,7 @@ const createUser = async (payload: any) => {
 };
 
 const getAllUser = async (queryParams: any) => {
-  const { q, ...otherQuery } = queryParams;
+  const { q, limit, page, ...otherQuery } = queryParams;
   const conditions = [];
   if (q) {
     conditions.push({
@@ -31,6 +31,8 @@ const getAllUser = async (queryParams: any) => {
   }
   const result = await prisma.user.findMany({
     where: { AND: conditions },
+    skip: (Number(page) - 1) * limit,
+    take: Number(limit),
   });
   return result;
 };
