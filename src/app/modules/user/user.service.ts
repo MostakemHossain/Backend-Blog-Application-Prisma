@@ -10,7 +10,15 @@ const createUser = async (payload: any) => {
 };
 
 const getAllUser = async (queryParams: any) => {
-  const { q, limit, page, ...otherQuery } = queryParams;
+  const {
+    q,
+    limit = 2,
+    sortOrder = "asc",
+    sortBy = "username",
+    page = 1,
+    ...otherQuery
+  } = queryParams;
+  console.log(sortBy, sortOrder);
   const conditions = [];
   if (q) {
     conditions.push({
@@ -33,6 +41,9 @@ const getAllUser = async (queryParams: any) => {
     where: { AND: conditions },
     skip: (Number(page) - 1) * limit,
     take: Number(limit),
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
   });
   return result;
 };
