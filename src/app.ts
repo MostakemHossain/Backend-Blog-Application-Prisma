@@ -20,4 +20,12 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     error: err,
   });
 });
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: "Opps! this url does not exists",
+    path: req.originalUrl,
+  });
+});
 export default app;
