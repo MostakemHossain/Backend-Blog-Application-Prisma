@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { userRoutes } from "./app/modules/user/user.routes";
 const app = express();
 
@@ -10,6 +10,14 @@ app.use("/api/v1/user", userRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Hello Blog app",
+  });
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(500).json({
+    success: false,
+    message: err.message || "Something went wrong",
+    error: err,
   });
 });
 export default app;
