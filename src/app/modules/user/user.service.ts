@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createUser = async (payload: any) => {
@@ -48,7 +48,35 @@ const getAllUser = async (queryParams: any) => {
   return result;
 };
 
+const getSingleUserFromDB = async (userId: string) => {
+  const result = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+  });
+  return result;
+};
+const updateUserFromDB = async (payload: Partial<User>, userId: string) => {
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: payload,
+  });
+  return result;
+};
+
+const deleteFromDb = async (userId: string) => {
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+};
 export const userServices = {
   createUser,
   getAllUser,
+  getSingleUserFromDB,
+  updateUserFromDB,
+  deleteFromDb,
 };
